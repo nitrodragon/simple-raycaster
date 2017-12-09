@@ -1,2 +1,2 @@
-# simple-raycaster
-A simple C++ raycaster using, of course, deprecated code libraries. Learning SDL 1.2.15.
+# A Couple Cool Relatively Simple Raycasters
+A bunch of simple C++ raycasters using, of course, deprecated code libraries (SDL 1.2.15).
