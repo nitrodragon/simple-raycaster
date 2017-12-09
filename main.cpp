@@ -6,56 +6,76 @@
 #include "quickcg.h"
 using namespace QuickCG;
 
-//place the example code below here:
-
+#define screenWidth 600
+#define screenHeight 450
+#define texWidth 64
+#define texHeight 64
 #define mapWidth 24
 #define mapHeight 24
 
-int worldMap[mapWidth][mapHeight] = { // Generated map of world
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-}; // Numbers represent different colors/values
+int worldMap[mapWidth][mapHeight] = {
+  {8,8,8,8,8,8,8,8,8,8,8,4,4,6,4,4,6,4,6,4,4,4,6,4},
+  {8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,0,0,0,0,0,0,4},
+  {8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,6},
+  {8,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+  {8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,4},
+  {8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,6,6,6,0,6,4,6},
+  {8,8,8,8,0,8,8,8,8,8,8,4,4,4,4,4,4,6,0,0,0,0,0,6},
+  {7,7,7,7,0,7,7,7,7,0,8,0,8,0,8,0,8,4,0,4,0,6,0,6},
+  {7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,0,0,0,0,0,6},
+  {7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,0,0,0,0,4},
+  {7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,6,0,6,0,6},
+  {7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,4,6,0,6,6,6},
+  {7,7,7,7,0,7,7,7,7,8,8,4,0,6,8,4,8,3,3,3,0,3,3,3},
+  {2,2,2,2,0,2,2,2,2,4,6,4,0,0,6,0,6,3,0,0,0,0,0,3},
+  {2,2,0,0,0,0,0,2,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3},
+  {2,0,0,0,0,0,0,0,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3},
+  {1,0,0,0,0,0,0,0,1,4,4,4,4,4,6,0,6,3,3,0,0,0,3,3},
+  {2,0,0,0,0,0,0,0,2,2,2,1,2,2,2,6,6,0,0,5,0,5,0,5},
+  {2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5},
+  {2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5},
+  {2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5},
+  {2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5},
+  {2,2,2,2,1,2,2,2,2,2,2,1,2,2,2,5,5,5,5,5,5,5,5,5}
+};
+
+Uint32 buffer[screenHeight][screenWidth];
 
 int main(int /*argc*/, char */*argv*/[]) {
-  double posX = 22, posY = 12; //x and y start position
-  double dirX = -1, dirY = 0;  //initial direction vector
-  double planeX = 0, planeY = 0.66; //the 2d raycaster version of camera plane
-  // planeY must be 0.66, so we're not in the ground
+  double posX = 22.0, posY = 11.5;  //x and y start position
+  double dirX = -1.0, dirY = 0.0; //initial direction vector
+  double planeX = 0.0, planeY = 0.66; //the 2d raycaster version of camera plane
 
-  double time = 0;    //time of current frame  (for fps)
-  double oldTime = 0; //time of previous frame (for fps)
+  double time = 0; //time of current frame
+  double oldTime = 0; //time of previous frame
 
-  screen(512, 384, 0, "Raycaster");
+  std::vector<Uint32> texture[8];
+  for(int i = 0; i < 8; i++) texture[i].resize(texWidth * texHeight);
+
+  screen(screenWidth,screenHeight, 0, "Raycaster 2: The Better One");
+
+  //generate some textures
+  unsigned long tw, th;
+  loadImage(texture[0], tw, th, "res/eagle.png");
+  loadImage(texture[1], tw, th, "res/redbrick.png");
+  loadImage(texture[2], tw, th, "res/purplestone.png");
+  loadImage(texture[3], tw, th, "res/greystone.png");
+  loadImage(texture[4], tw, th, "res/bluestone.png");
+  loadImage(texture[5], tw, th, "res/mossy.png");
+  loadImage(texture[6], tw, th, "res/wood.png");
+  loadImage(texture[7], tw, th, "res/colorstone.png");
+
+  //start the main loop
   while(!done()) {
     for(int x = 0; x < w; x++) {
       //calculate ray position and direction
-      double cameraX = 2 * x / double(w) - 1; //x-coordinate in camera space
+      double cameraX = 2*x/double(w)-1; //x-coordinate in camera space
       double rayPosX = posX;
       double rayPosY = posY;
-      double rayDirX = dirX + planeX * cameraX;
-      double rayDirY = dirY + planeY * cameraX;
+      double rayDirX = dirX + planeX*cameraX;
+      double rayDirY = dirY + planeY*cameraX;
+
       //which box of the map we're in
       int mapX = int(rayPosX);
       int mapY = int(rayPosY);
@@ -64,18 +84,18 @@ int main(int /*argc*/, char */*argv*/[]) {
       double sideDistX;
       double sideDistY;
 
-       //length of ray from one x or y-side to next x or y-side
+      //length of ray from one x or y-side to next x or y-side
       double deltaDistX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
       double deltaDistY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
       double perpWallDist;
 
-      //what direction to step in (either +1 or -1)
+      //what direction to step in x or y-direction (either +1 or -1)
       int stepX;
       int stepY;
 
       int hit = 0; //was there a wall hit?
       int side; //was a NS or a EW wall hit?
-      
+
       //calculate step and initial sideDist
       if (rayDirX < 0) {
         stepX = -1;
@@ -106,7 +126,8 @@ int main(int /*argc*/, char */*argv*/[]) {
         //Check if ray has hit a wall
         if (worldMap[mapX][mapY] > 0) hit = 1;
       }
-      //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
+
+      //Calculate distance of perpendicular ray (Euclidean distance will give fisheye effect!)
       if (side == 0) perpWallDist = (mapX - rayPosX + (1 - stepX) / 2) / rayDirX;
       else           perpWallDist = (mapY - rayPosY + (1 - stepY) / 2) / rayDirY;
 
@@ -115,34 +136,97 @@ int main(int /*argc*/, char */*argv*/[]) {
 
       //calculate lowest and highest pixel to fill in current stripe
       int drawStart = -lineHeight / 2 + h / 2;
-      if (drawStart < 0) drawStart = 0;
+      if(drawStart < 0) drawStart = 0;
       int drawEnd = lineHeight / 2 + h / 2;
-      if (drawEnd >= h)  drawEnd = h - 1;
+      if(drawEnd >= h) drawEnd = h - 1;
 
-      //choose wall color
-      ColorRGB color;
-      switch(worldMap[mapX][mapY]) {
-        case 1:  color = RGB_Red;  break; //red
-        case 2:  color = RGB_Green;  break; //green
-        case 3:  color = RGB_Blue;   break; //blue
-        case 4:  color = RGB_White;  break; //white
-        default: color = RGB_Yellow; break; //yellow
+      //texturing calculations
+      int texNum = worldMap[mapX][mapY] - 1; //1 subtracted from it so that texture 0 can be used!
+
+      //calculate value of wallX
+      double wallX; //where exactly the wall was hit
+      if (side == 0) wallX = rayPosY + perpWallDist * rayDirY;
+      else           wallX = rayPosX + perpWallDist * rayDirX;
+      wallX -= floor((wallX));
+
+      //x coordinate on the texture
+      int texX = int(wallX * double(texWidth));
+      if(side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
+      if(side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
+
+      for(int y = drawStart; y < drawEnd; y++) {
+        int d = y * 256 - h * 128 + lineHeight * 128;  //256 and 128 factors to avoid floats
+        int texY = ((d * texHeight) / lineHeight) / 256;
+        Uint32 color = texture[texNum][texHeight * texY + texX];
+        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+        if(side == 1) color = (color >> 1) & 8355711;
+        buffer[y][x] = color;
       }
-      if (side == 1) {color = color / 2;} //give x and y sides different brightness
-      //draw the pixels of the stripe as a vertical line
-      verLine(x, drawStart, drawEnd, color);
-    }
+		//FLOOR CASTING TIME WAHOO
+		double floorXWall, floorYWall;
+	  if (side == 0 && rayDirX > 0) {
+        floorXWall = mapX;
+        floorYWall = mapY + wallX;
+      }
+      else if(side == 0 && rayDirX < 0) {
+        floorXWall = mapX + 1.0;
+        floorYWall = mapY + wallX;
+      }
+      else if(side == 1 && rayDirY > 0) {
+        floorXWall = mapX + wallX;
+        floorYWall = mapY;
+      }
+      else {
+        floorXWall = mapX + wallX;
+        floorYWall = mapY + 1.0;
+      }
+		
+		double distWall, distPlayer, currentDist;
+		
+		distWall = perpWallDist;
+		distPlayer = 0.0;
+		
+		if (drawEnd < 0) drawEnd = h; // becomes 0 after int overflow
+		
+		for(int y = drawEnd + 1; y < h; y++) {
+			currentDist = h / (2.0 * y - h);
+			
+			double weight = (currentDist - distPlayer) / (distWall - distPlayer);
+			
+			double currentFloorX = weight * floorXWall + (1.0 - weight) * posX;
+			double currentFloorY = weight * floorYWall + (1.0 - weight) * posY;
+			
+			int floorTexX, floorTexY;
+			floorTexX = int(currentFloorX * texWidth / 4) % texWidth;
+			floorTexY = int(currentFloorY * texHeight / 4) % texHeight;
+
+			int diagonalPattern = (int(currentFloorX + currentFloorY)) % 2;
+			int floorTexture;
+			if(diagonalPattern == 0) {
+				floorTexture = 3;
+			} else { 
+				floorTexture = 4;
+			}
+        //floor
+        buffer[y][x] = (texture[3][texWidth * floorTexY + floorTexX] >> 1) & 8355711;
+        //ceiling
+        buffer[h - y][x] = texture[6][texWidth * floorTexY + floorTexX];
+	}
+ }
+
+    drawBuffer(buffer[0]);
+    for(int x = 0; x < w; x++) for(int y = 0; y < h; y++) buffer[y][x] = 0; //clear the buffer instead of cls()
     //timing for input and FPS counter
     oldTime = time;
     time = getTicks();
-    double frameTime = (time - oldTime) / 1000.0; //frameTime is the time this frame has taken, in seconds
+    double frameTime = (time - oldTime) / 1000.0; //frametime is the time this frame has taken, in seconds
     print(1.0 / frameTime); //FPS counter
     redraw();
-    cls();
 
     //speed modifiers
     double moveSpeed = frameTime * 5.0; //the constant value is in squares/second
-    double rotSpeed = frameTime * 3.0;  //the constant value is in radians/second
+    double rotSpeed = frameTime * 3.0; //the constant value is in radians/second
+
     readKeys();
     //move forward if no wall in front of you
     if (keyDown(SDLK_UP)) {
@@ -173,9 +257,6 @@ int main(int /*argc*/, char */*argv*/[]) {
       double oldPlaneX = planeX;
       planeX = planeX * cos(rotSpeed) - planeY * sin(rotSpeed);
       planeY = oldPlaneX * sin(rotSpeed) + planeY * cos(rotSpeed);
-    }
-    if (keyDown(SDLK_ESCAPE)) {
-      end();
     }
   }
 }
