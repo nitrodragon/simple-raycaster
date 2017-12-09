@@ -180,22 +180,22 @@ int main(int /*argc*/, char */*argv*/[]) {
         floorXWall = mapX + wallX;
         floorYWall = mapY + 1.0;
       }
-		
+
 		double distWall, distPlayer, currentDist;
-		
+
 		distWall = perpWallDist;
 		distPlayer = 0.0;
-		
+
 		if (drawEnd < 0) drawEnd = h; // becomes 0 after int overflow
-		
+
 		for(int y = drawEnd + 1; y < h; y++) {
 			currentDist = h / (2.0 * y - h);
-			
+
 			double weight = (currentDist - distPlayer) / (distWall - distPlayer);
-			
+
 			double currentFloorX = weight * floorXWall + (1.0 - weight) * posX;
 			double currentFloorY = weight * floorYWall + (1.0 - weight) * posY;
-			
+
 			int floorTexX, floorTexY;
 			floorTexX = int(currentFloorX * texWidth / 4) % texWidth;
 			floorTexY = int(currentFloorY * texHeight / 4) % texHeight;
@@ -204,7 +204,7 @@ int main(int /*argc*/, char */*argv*/[]) {
 			int floorTexture;
 			if(diagonalPattern == 0) {
 				floorTexture = 3;
-			} else { 
+			} else {
 				floorTexture = 4;
 			}
         //floor
