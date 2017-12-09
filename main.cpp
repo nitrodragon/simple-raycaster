@@ -53,7 +53,7 @@ int main(int /*argc*/, char */*argv*/[]) {
   std::vector<Uint32> texture[8];
   for(int i = 0; i < 8; i++) texture[i].resize(texWidth * texHeight);
 
-  screen(screenWidth,screenHeight, 0, "Raycaster 2: The Better One");
+  screen(screenWidth,screenHeight, 0, "Raycaster II: The Better One");
 
   //generate some textures
   unsigned long tw, th;
@@ -70,7 +70,7 @@ int main(int /*argc*/, char */*argv*/[]) {
   while(!done()) {
     for(int x = 0; x < w; x++) {
       //calculate ray position and direction
-      double cameraX = 2*x/double(w)-1; //x-coordinate in camera space
+      double cameraX = 2 * x / double(w) - 1; //x-coordinate in camera space
       double rayPosX = posX;
       double rayPosY = posY;
       double rayDirX = dirX + planeX*cameraX;
